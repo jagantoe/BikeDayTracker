@@ -35,9 +35,9 @@ A lightweight Progressive Web App (PWA) to track which office locations you cycl
 
 ## Installation on Mobile
 
-1. Open `index.html` in your mobile browser (Chrome on Android, Safari on iOS)
+1. Open [the site](https://jagantoe.github.io/BikeDayTracker) in your mobile browser (Chrome on Android, Safari on iOS)
 2. Use the browser's "Add to Home Screen" / "Install App" option
-3. The app launches in standalone mode (no browser chrome)
+3. The app launches in standalone mode (no browser)
 
 ---
 
