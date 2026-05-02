@@ -23,6 +23,76 @@
         .modal-backdrop { background: rgba(0,0,0,0.4); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+        /* ===== BDT motion: location toggle buttons ===== */
+        .bdt-loc-btn {
+          position: relative; overflow: hidden;
+          transition: border-color .25s ease, background-color .25s ease, color .25s ease, box-shadow .25s ease;
+        }
+        .bdt-loc-btn .bdt-avatar { transition: background-color .25s ease, color .25s ease; }
+        .bdt-loc-btn .bdt-glyph {
+          transition: opacity .2s, transform .25s cubic-bezier(.34,1.56,.64,1);
+        }
+        .bdt-loc-btn .bdt-glyph.check { opacity: 0; transform: scale(.4); }
+        .bdt-loc-btn[data-active="true"] .bdt-glyph.letter { opacity: 0; transform: scale(.4); }
+        .bdt-loc-btn[data-active="true"] .bdt-glyph.check  { opacity: 1; transform: scale(1); }
+        .bdt-loc-btn .bdt-ripple {
+          position: absolute; width: 8px; height: 8px; border-radius: 9999px;
+          background: currentColor; opacity: 0; pointer-events: none;
+        }
+        .bdt-loc-btn.bdt-just-activated .bdt-ripple { animation: bdt-ripple .55s ease-out; }
+        @keyframes bdt-ripple {
+          0%   { transform: scale(1); opacity: .35; }
+          100% { transform: scale(20); opacity: 0; }
+        }
+
+        /* ===== BDT motion: calendar today-cell breathe ===== */
+        .bdt-today-cell { position: relative; }
+        .bdt-today-cell::before {
+          content: ""; position: absolute; inset: 0; border-radius: inherit;
+          box-shadow: inset 0 0 0 2px #60a5fa;
+          animation: bdt-breathe 2.4s ease-in-out infinite;
+          pointer-events: none;
+        }
+        @keyframes bdt-breathe {
+          0%, 100% { opacity: .6; transform: scale(1); }
+          50%      { opacity: 0;  transform: scale(1.18); }
+        }
+
+        /* ===== BDT motion: calendar dot pop-in ===== */
+        .bdt-dot-pop { animation: bdt-pop .55s cubic-bezier(.34,1.56,.64,1) both; }
+        @keyframes bdt-pop {
+          0%   { transform: scale(0);    opacity: 0; }
+          60%  { transform: scale(1.25); }
+          100% { transform: scale(1);    opacity: 1; }
+        }
+
+        /* ===== BDT motion: tab slider indicator ===== */
+        .bdt-tabbar { position: relative; }
+        .bdt-tabbar .bdt-tab-indicator {
+          position: absolute; top: 0; left: 0; height: 2px; width: 33.333%;
+          background: #1e40af;
+          transform: translateX(0);
+          transition: transform .35s cubic-bezier(.4,0,.2,1);
+          pointer-events: none;
+        }
+        .bdt-tab-btn svg { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+        .bdt-tab-btn.tab-active svg { transform: scale(1.12); }
+
+        /* ===== BDT motion: copy-success ripple ===== */
+        #btnCopySummary { position: relative; overflow: hidden; }
+        #btnCopySummary.bdt-copied::before {
+          content: ""; position: absolute; left: 50%; top: 50%;
+          width: 8px; height: 8px; border-radius: 9999px;
+          background: #16a34a;
+          transform: translate(-50%,-50%) scale(0);
+          animation: bdt-wave .6s ease-out;
+          pointer-events: none;
+        }
+        @keyframes bdt-wave {
+          0%   { transform: translate(-50%,-50%) scale(0);  opacity: .4; }
+          100% { transform: translate(-50%,-50%) scale(60); opacity: 0; }
+        }
     </style>
 </head>
 
@@ -30,9 +100,15 @@
     <!-- Header -->
     <header class="bg-blue-800 text-white px-4 py-3 flex items-center justify-between shadow-md sticky top-0 z-30">
         <div class="flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/>
-                <path d="M15 6l-4 8h6l-3 3M5.5 17.5L9 9l3 8"/>
+            <svg class="w-7 h-7" viewBox="0 0 64 64" fill="none" aria-label="Bike Day Tracker">
+              <path d="M18 42 L34 22 L46 42 M34 22 L40 22 M28 42 L40 22"
+                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+              <circle cx="18" cy="42" r="11.5" stroke="currentColor" stroke-width="2"/>
+              <circle cx="46" cy="42" r="11.5" stroke="currentColor" stroke-width="2"/>
+              <g fill="currentColor"><circle cx="18" cy="33.5" r="1.4"/><circle cx="24.01" cy="35.99" r="1.4"/><circle cx="26.5" cy="42" r="1.4"/><circle cx="24.01" cy="48.01" r="1.4"/><circle cx="18" cy="50.5" r="1.4"/><circle cx="11.99" cy="48.01" r="1.4"/><circle cx="9.5" cy="42" r="1.4"/><circle cx="11.99" cy="35.99" r="1.4"/></g>
+              <g fill="currentColor"><circle cx="52.01" cy="35.99" r="1.4"/><circle cx="54.5" cy="42" r="1.4"/><circle cx="52.01" cy="48.01" r="1.4"/><circle cx="46" cy="50.5" r="1.4"/><circle cx="39.99" cy="48.01" r="1.4"/><circle cx="37.5" cy="42" r="1.4"/><circle cx="39.99" cy="35.99" r="1.4"/></g>
+              <circle cx="46" cy="33.5" r="2" fill="#f59e0b"/>
+              <circle cx="18" cy="42" r="1.8" fill="currentColor"/><circle cx="46" cy="42" r="1.8" fill="currentColor"/>
             </svg>
             <h1 class="text-lg font-bold">Bike Day Tracker</h1>
         </div>
@@ -57,19 +133,19 @@
     <!-- Bottom Tab Bar -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 max-w-lg mx-auto">
         <div class="flex">
-            <button class="tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-active" data-tab="today">
+            <button class="tab-btn bdt-tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-active" data-tab="today">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <span class="text-xs mt-0.5 font-medium">Today</span>
             </button>
-            <button class="tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-inactive" data-tab="calendar">
+            <button class="tab-btn bdt-tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-inactive" data-tab="calendar">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
                 </svg>
                 <span class="text-xs mt-0.5 font-medium">Calendar</span>
             </button>
-            <button class="tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-inactive" data-tab="summary">
+            <button class="tab-btn bdt-tab-btn flex-1 flex flex-col items-center py-2 border-t-2 tab-inactive" data-tab="summary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                 </svg>
@@ -286,7 +362,18 @@
         if (locations.length === 0) {
             container.innerHTML = `
                 <div class="text-center py-12">
-                    <div class="text-6xl mb-4">🚲</div>
+                    <div class="mb-4 inline-flex w-20 h-20 rounded-2xl bg-blue-800 items-center justify-center text-white">
+                      <svg class="w-12 h-12" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                        <path d="M18 42 L34 22 L46 42 M34 22 L40 22 M28 42 L40 22"
+                              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+                        <circle cx="18" cy="42" r="11.5" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="46" cy="42" r="11.5" stroke="currentColor" stroke-width="2"/>
+                        <g fill="currentColor"><circle cx="18" cy="33.5" r="1.4"/><circle cx="24.01" cy="35.99" r="1.4"/><circle cx="26.5" cy="42" r="1.4"/><circle cx="24.01" cy="48.01" r="1.4"/><circle cx="18" cy="50.5" r="1.4"/><circle cx="11.99" cy="48.01" r="1.4"/><circle cx="9.5" cy="42" r="1.4"/><circle cx="11.99" cy="35.99" r="1.4"/></g>
+                        <g fill="currentColor"><circle cx="52.01" cy="35.99" r="1.4"/><circle cx="54.5" cy="42" r="1.4"/><circle cx="52.01" cy="48.01" r="1.4"/><circle cx="46" cy="50.5" r="1.4"/><circle cx="39.99" cy="48.01" r="1.4"/><circle cx="37.5" cy="42" r="1.4"/><circle cx="39.99" cy="35.99" r="1.4"/></g>
+                        <circle cx="46" cy="33.5" r="2" fill="#f59e0b"/>
+                        <circle cx="18" cy="42" r="1.8" fill="currentColor"/><circle cx="46" cy="42" r="1.8" fill="currentColor"/>
+                      </svg>
+                    </div>
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Welcome!</h2>
                     <p class="text-gray-500 mb-6">Add your office locations to start tracking bike days.</p>
                     <button onclick="openSettings()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition">
@@ -342,24 +429,27 @@
             const active = entry.locationIds.includes(loc.id);
             toggles.appendChild(createToggleButton(loc, active, dateStr));
         });
+        if (window.BDT) BDT.attach();
     }
 
     function createToggleButton(loc, active, dateStr) {
         const btn = document.createElement('button');
-        btn.className = `location-btn w-full flex items-center gap-3 p-4 rounded-xl border-2 transition ${
+        btn.className = `location-btn bdt-loc-btn w-full flex items-center gap-3 p-4 rounded-xl border-2 transition ${
             active
                 ? 'shadow-md'
                 : 'bg-white border-gray-200 hover:border-gray-300'
         }`;
+        btn.dataset.active = active ? 'true' : 'false';
         if (active) {
             btn.style.borderColor = loc.color;
             btn.style.backgroundColor = loc.color + '15';
         }
         const distText = loc.distance ? `<span class="text-xs text-gray-400">${loc.distance} km</span>` : '';
         btn.innerHTML = `
-            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-bold transition"
+            <div class="bdt-avatar w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-bold transition relative overflow-hidden"
                 style="background:${active ? loc.color : '#e5e7eb'};color:${active ? contrastColor(loc.color) : '#9ca3af'}">
-                ${active ? '✓' : loc.name.charAt(0).toUpperCase()}
+                <span class="bdt-glyph letter absolute inset-0 flex items-center justify-center">${loc.name.charAt(0).toUpperCase()}</span>
+                <span class="bdt-glyph check absolute inset-0 flex items-center justify-center">✓</span>
             </div>
             <div class="flex-1 text-left">
                 <div class="font-semibold ${active ? 'text-gray-800' : 'text-gray-600'}">${escapeHtml(loc.name)}</div>
@@ -371,17 +461,50 @@
             </div>
         `;
         btn.addEventListener('click', async () => {
+            const nowActive = btn.dataset.active !== 'true';
+
+            // Flip data-active immediately — CSS crossfade fires here
+            btn.dataset.active = nowActive ? 'true' : 'false';
+
+            // Button border/shadow/bg
+            if (nowActive) {
+                btn.classList.add('shadow-md');
+                btn.classList.remove('bg-white', 'border-gray-200', 'hover:border-gray-300');
+                btn.style.borderColor = loc.color;
+                btn.style.backgroundColor = loc.color + '15';
+            } else {
+                btn.classList.remove('shadow-md');
+                btn.classList.add('bg-white', 'border-gray-200', 'hover:border-gray-300');
+                btn.style.borderColor = '';
+                btn.style.backgroundColor = '';
+            }
+
+            // Avatar background/color
+            const avatar = btn.querySelector('.bdt-avatar');
+            if (avatar) {
+                avatar.style.background = nowActive ? loc.color : '#e5e7eb';
+                avatar.style.color = nowActive ? contrastColor(loc.color) : '#9ca3af';
+            }
+
+            // Label text color
+            const label = btn.querySelector('.flex-1 .font-semibold');
+            if (label) label.className = `font-semibold ${nowActive ? 'text-gray-800' : 'text-gray-600'}`;
+
+            // Right-side indicator ring + checkmark
+            const indicator = btn.querySelector('.w-5.h-5.rounded-full');
+            if (indicator) {
+                indicator.style.background = nowActive ? loc.color : 'transparent';
+                indicator.innerHTML = nowActive
+                    ? `<svg class="w-3 h-3" fill="${contrastColor(loc.color)}" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>`
+                    : '';
+            }
+
+            // Persist to DB (no re-render — animations must complete on this element)
             const entry = await getEntry(dateStr) || { date: dateStr, locationIds: [] };
             const idx = entry.locationIds.indexOf(loc.id);
             if (idx >= 0) entry.locationIds.splice(idx, 1);
             else entry.locationIds.push(loc.id);
             await saveEntry(dateStr, entry.locationIds);
-            // Re-render based on context
-            if (document.getElementById('modalDayEdit').classList.contains('hidden')) {
-                renderToday();
-            } else {
-                renderDayEditContent(dateStr);
-            }
         });
         return btn;
     }
@@ -433,11 +556,11 @@
             const isToday = dateStr === todayStr;
             const dots = entry ? entry.locationIds.map(id => {
                 const loc = locMap[id];
-                return loc ? `<div class="w-2 h-2 rounded-full" style="background:${loc.color}"></div>` : '';
+                return loc ? `<div class="cal-dot w-2 h-2 rounded-full" style="background:${loc.color}"></div>` : '';
             }).join('') : '';
 
             html += `
-                <button class="cal-day rounded-lg p-1 flex flex-col items-center justify-start hover:bg-gray-100 transition relative ${isToday ? 'bg-blue-50 ring-2 ring-blue-400' : ''}"
+                <button class="cal-day rounded-lg p-1 flex flex-col items-center justify-start hover:bg-gray-100 transition relative ${isToday ? 'bg-blue-50 ring-2 ring-blue-400 bdt-today-cell' : ''}"
                     data-date="${dateStr}">
                     <span class="text-sm font-medium ${isToday ? 'text-blue-700 font-bold' : 'text-gray-700'}">${d}</span>
                     <div class="flex gap-0.5 mt-0.5 flex-wrap justify-center">${dots}</div>
@@ -462,6 +585,12 @@
         container.querySelectorAll('[data-date]').forEach(btn => {
             btn.addEventListener('click', () => openDayEdit(btn.dataset.date));
         });
+        if (window.BDT) {
+            container.querySelectorAll('.cal-day').forEach(cell => {
+                BDT.popDots(cell.querySelectorAll('.cal-dot'));
+            });
+            BDT.attach();
+        }
     }
 
     // ==================== Day Edit Modal ====================
@@ -623,6 +752,7 @@
                 } catch(e) { /* clipboard API might fail in insecure contexts */ }
             });
         }
+        if (window.BDT) BDT.attach();
     }
 
     // ==================== Settings Modal ====================
@@ -744,7 +874,7 @@
         background_color: '#f9fafb',
         theme_color: '#1e40af',
         icons: [{
-            src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#1e40af"/><text x="50" y="68" font-size="50" text-anchor="middle" fill="white">🚲</text></svg>'),
+            src: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1e40af"/><g transform="translate(18 18) scale(1.0625)" stroke="#ffffff" fill="none"><path d="M18 42 L34 22 L46 42 M34 22 L40 22 M28 42 L40 22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.78"/><circle cx="18" cy="42" r="11.5" stroke-width="2"/><circle cx="46" cy="42" r="11.5" stroke-width="2"/><g fill="#fff" stroke="none"><circle cx="18" cy="33.5" r="1.4"/><circle cx="24.01" cy="35.99" r="1.4"/><circle cx="26.5" cy="42" r="1.4"/><circle cx="24.01" cy="48.01" r="1.4"/><circle cx="18" cy="50.5" r="1.4"/><circle cx="11.99" cy="48.01" r="1.4"/><circle cx="9.5" cy="42" r="1.4"/><circle cx="11.99" cy="35.99" r="1.4"/><circle cx="52.01" cy="35.99" r="1.4"/><circle cx="54.5" cy="42" r="1.4"/><circle cx="52.01" cy="48.01" r="1.4"/><circle cx="46" cy="50.5" r="1.4"/><circle cx="39.99" cy="48.01" r="1.4"/><circle cx="37.5" cy="42" r="1.4"/><circle cx="39.99" cy="35.99" r="1.4"/><circle cx="18" cy="42" r="1.8"/><circle cx="46" cy="42" r="1.8"/></g><circle cx="46" cy="33.5" r="2" fill="#f59e0b"/></g></svg>`),
             sizes: '512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'
@@ -790,6 +920,77 @@
         await openDB();
         renderToday();
     })();
+    </script>
+    <script>
+    /* bdt-motion.js — wires CSS motion into the existing app */
+    window.BDT = window.BDT || {};
+
+    BDT.attach = function () {
+        BDT.attachTabIndicator();
+        BDT.attachLocButtonRipples();
+        BDT.attachTodayBreathe();
+        BDT.attachCopyRipple();
+    };
+
+    BDT.attachTabIndicator = function () {
+        const bar = document.querySelector('nav.bdt-tabbar') || document.querySelector('nav .flex');
+        if (!bar || bar.dataset.bdtWired) return;
+        if (!bar.querySelector('.bdt-tab-indicator')) {
+            const ind = document.createElement('div');
+            ind.className = 'bdt-tab-indicator';
+            bar.parentElement.classList.add('bdt-tabbar');
+            bar.parentElement.appendChild(ind);
+        }
+        const tabs = [...bar.querySelectorAll('.tab-btn')];
+        const move = () => {
+            const idx = tabs.findIndex(t => t.classList.contains('tab-active'));
+            const ind = bar.parentElement.querySelector('.bdt-tab-indicator');
+            if (ind && idx >= 0) ind.style.transform = `translateX(${idx * 100}%)`;
+        };
+        tabs.forEach(t => t.addEventListener('click', () => setTimeout(move, 0)));
+        move();
+        bar.dataset.bdtWired = '1';
+    };
+
+    BDT.attachLocButtonRipples = function () {
+        document.querySelectorAll('.bdt-loc-btn:not([data-bdt-ripple])').forEach(btn => {
+            btn.dataset.bdtRipple = '1';
+            if (!btn.querySelector('.bdt-ripple')) {
+                const r = document.createElement('span');
+                r.className = 'bdt-ripple';
+                btn.appendChild(r);
+            }
+            btn.addEventListener('click', () => {
+                btn.classList.remove('bdt-just-activated');
+                void btn.offsetWidth;
+                btn.classList.add('bdt-just-activated');
+            });
+        });
+    };
+
+    BDT.attachTodayBreathe = function () {
+        document.querySelectorAll('.cal-today, [data-today="true"]').forEach(el => {
+            el.classList.add('bdt-today-cell');
+        });
+    };
+
+    BDT.attachCopyRipple = function () {
+        const btn = document.getElementById('btnCopySummary');
+        if (!btn || btn.dataset.bdtRipple) return;
+        btn.dataset.bdtRipple = '1';
+        btn.addEventListener('click', () => {
+            btn.classList.remove('bdt-copied'); void btn.offsetWidth;
+            btn.classList.add('bdt-copied');
+            setTimeout(() => btn.classList.remove('bdt-copied'), 700);
+        });
+    };
+
+    BDT.popDots = function (nodeList) {
+        nodeList.forEach((dot, i) => {
+            dot.style.animationDelay = (i * 60) + 'ms';
+            dot.classList.add('bdt-dot-pop');
+        });
+    };
     </script>
 </body>
 
